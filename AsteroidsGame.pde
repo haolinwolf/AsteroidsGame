@@ -82,7 +82,7 @@ class SpaceShip extends Floater
       myDirectionX = 0;
       myDirectionY = 0;
       myPointDirection = 0;
-      myColor = color ((int)(Math.random()*251)) ;
+      myColor = color (255) ;
     }
     public void setX(int x ){myCenterX = x;}
     public int getX(){return (int)myCenterX;}
