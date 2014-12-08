@@ -14,8 +14,8 @@ import java.io.IOException;
 
 public class AsteroidsGame extends PApplet {
 
-
-Asteroid[] enemy;
+public int numAsteroids = 5;
+ArrayList <Asteroid> enemy = new ArrayList <Asteroid>();
 Star[] minions;
 SpaceShip haolin;//your variable declarations here
 public void setup() 
@@ -28,10 +28,9 @@ public void setup()
     minions[i] = new Star();
     minions[i].show();
   }
-  enemy = new Asteroid[5];
-  for (int i=0; i<enemy.length; i++)
+  for (int i=0; i<numAsteroids; i++)
   {
-     enemy[i] = new Asteroid();
+     enemy.add(new Asteroid());
   }
 }
  
@@ -43,14 +42,18 @@ public void draw()
   {
     minions[i].show();
   }
-  for(int i=0; i<enemy.length; i++)
-  {
-     enemy[i].show();
-     enemy[i].move();
-  }
- 
   haolin.show();
-  haolin.move();//your code here
+  haolin.move();
+  for(int i = 0; i < enemy.size(); i++)
+  {
+    if(dist(enemy.get(i).getX(), enemy.get(i).getY(), haolin.getX(), haolin.getY()) < 30)
+       enemy.remove(i);
+    else 
+    {
+      enemy.get(i).show();
+      enemy.get(i).move();
+    }
+  }//your code here
 }
 
 public void keyPressed()
