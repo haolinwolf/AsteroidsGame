@@ -1,7 +1,8 @@
-public int numAsteroids = 5;
+public int numAsteroids = 7;
 ArrayList <Asteroid> enemy = new ArrayList <Asteroid>();
 Star[] minions;
-SpaceShip haolin;//your variable declarations here
+SpaceShip haolin;
+ArrayList <Bullet> bullets = new ArrayList <Bullet>();//your variable declarations here
 public void setup() 
 {
   size(400,400);
@@ -26,18 +27,36 @@ public void draw()
   {
     minions[i].show();
   }
-  haolin.show();
-  haolin.move();
-  for(int i = 0; i < enemy.size(); i++)
+  for(int eI = 0; eI < enemy.size(); eI++)
   {
-    if(dist(enemy.get(i).getX(), enemy.get(i).getY(), haolin.getX(), haolin.getY()) < 30)
-       enemy.remove(i);
-    else 
+    if(dist(enemy.get(eI).getX(), enemy.get(eI).getY(), haolin.getX(), haolin.getY()) < 30)
+       {
+         enemy.remove(eI);
+       }
+    
+    for(int bI = 0; bI < bullets.size(); bI++) 
+      {
+        if(dist(enemy.get(eI).getX(), enemy.get(eI).getY(), bullets.get(bI).getX(), bullets.get(bI).getY()) < 20) 
+       {
+         enemy.remove(eI);
+         bullets.remove(bI);
+         break;
+       } 
+     }
+   }
+   for (int eI=0; eI< enemy.size();eI++)
     {
-      enemy.get(i).show();
-      enemy.get(i).move();
+        enemy.get(eI).show();
+        enemy.get(eI).move();
     }
-  }//your code here
+    for (int bI=0; bI< bullets.size(); bI++) 
+    {
+       bullets.get(bI).show();
+       bullets.get(bI).move();
+    } 
+    haolin.show();
+    haolin.move();
+    //your code here
 }
 
 public void keyPressed()
@@ -65,6 +84,9 @@ public void keyPressed()
   else if (keyCode == RIGHT)
   {
     haolin.rotate(20);
+  }
+   else if(keyCode == 65) {
+    bullets.add(new Bullet(haolin));
   }
 } 
 class Star
@@ -107,7 +129,7 @@ class Asteroid extends Floater
     yCorners[6] = 30;
   
     
-    myColor = color(255);
+    myColor = color(255,127,80);
     myCenterX = (int)(Math.random()*800);
     myCenterY = (int)(Math.random()*400);
     myDirectionX = (int)(Math.random()*3)-1;
@@ -132,6 +154,42 @@ class Asteroid extends Floater
     public double getPointDirection(){return myPointDirection;}
 }
 
+class Bullet extends Floater
+{
+ public Bullet(SpaceShip theShip)
+ {
+   myCenterX = theShip.getX();
+   myCenterY = theShip.getY();
+   myPointDirection = theShip.getPointDirection();
+   double dRadians = myPointDirection*(Math.PI/180);
+   myDirectionX = 5*Math.cos(dRadians) + theShip.getDirectionX();
+   myDirectionY = 5*Math.sin(dRadians) + theShip.getDirectionY();
+ }
+
+ public void setX(int x){myCenterX = x;} 
+ public void setY(int y){myCenterY = y;}
+ public void setDirectionX(double x) {myDirectionX = x;}
+ public void setDirectionY(double y){myDirectionY = y;} 
+ public void setPointDirection(int degrees) {myPointDirection = degrees;} 
+
+ public int getX() {return (int)myCenterX;}
+ public int getY() {return (int)myCenterY;}
+ public double getDirectionX() {return myDirectionX;} 
+ public double getDirectionY() {return myDirectionY;} 
+ public double getPointDirection() {return myPointDirection;} 
+
+ public void show()
+ {
+   fill(255,255,255);
+   ellipse((float)myCenterX,(float)myCenterY,5,5);
+ }
+
+ public void move()
+ {
+   myCenterX += myDirectionX;
+   myCenterY += myDirectionY;
+ }
+}
 class SpaceShip extends Floater  
 {   
     public SpaceShip()
